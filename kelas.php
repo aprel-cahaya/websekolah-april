@@ -43,7 +43,7 @@ $result = mysqli_query($koneksi, $query);
                 <a href="index.php" class="btn btn-primary">Kembali ke Data Siswa</a>
                 <form method="GET" class="d-flex">
                     <input type="text" name="search" class = "form-control me-2" placeholder = "Cari kelas..." value = "<?php echo $search; ?>">
-                    <button type="submit" class = "btn btn-succes">Cari</button>
+                    <button type="submit" class="btn btn-success">Cari</button>
                 </form>
                 <a href="tambah_kelas.php" class ="btn btn-succes">Tambah Kelas</a>
         </div>
@@ -64,7 +64,7 @@ $result = mysqli_query($koneksi, $query);
                     <td><?php echo $row['nama_kelas']; ?>  </td>
                     <td>
                         <a href="edit_kelas.php?id=<?php echo $row['id_class']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="hapus_kelas.php?id=<?php echo $row['id_class']; ?>" class="btn btn-danger btn-sm "onclick = "return confirm('Yakin ingin menghapus?');">Hapus</a>
+                        <a href="delete_kelas.php?id=<?php echo $row['id_class']; ?>" class="btn btn-danger btn-sm "onclick = "return confirm('Yakin ingin menghapus?');">Hapus</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>
@@ -72,11 +72,11 @@ $result = mysqli_query($koneksi, $query);
         </table>
         <nav>
             <ul class="pagination">
-                <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
-                    <li class="pages-item <?php if ($page == $i) echo 'active'; ?>">
-                    <a class= "pages-link" href="?page=<?php echo $i; ?>&search=<?php echo $search; ?>"> <?php echo $i;?></a>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <li class="page-item <?php if ($page == $i) echo 'active'; ?>">
+                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>"> <?php echo $i; ?></a>
                     </li>
-                    <?php endfor;?>
+                <?php endfor; ?>
             </ul>
         </nav>
 

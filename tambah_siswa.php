@@ -2,21 +2,33 @@
 include 'koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nis = $_POST['nis'];
-    $nama_siswa = $_POST['nama_siswa'];
-    $jenis_kelamin = $_POST['jenis_kelamin'];
-    $tempat_lahir = $_POST['tempat_lahir'];
-    $tanggal_lahir = $_POST['tanggal_lahir'];
-    $id_class = $_POST['id_class'];
-    $id_wali = $_POST['id_wali'];
     
-    $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_class, id_wali) VALUES ('$nis', '$nama_siswa', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$id_class', '$id_wali')";
+    $nis_query = mysqli_query($koneksi, "SELECT MAX(nis) AS max_nis FROM siswa");
+    $nis_result = mysqli_fetch_assoc($nis_query);
+    $nis = $nis_result['max_nis'] + 1; 
+
+   
+
+    if (!in_array($jenis_kelamin, ['Laki-laki', 'Perempuan'])) {
+        die("Jenis kelamin tidak valid!");
+    }
     
-    if (mysqli_query($koneksi, $query)) {
-        echo "<script>alert('Data berhasil ditambahkan!'); window.location.href = 'data_siswa.php';</script>";
+    
+    $jenis_kelamin = ($jenis_kelamin == 'Laki-laki') ? 'L' : 'P';
+    
+    
+    $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_class, id_wali) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($koneksi, $query);
+    mysqli_stmt_bind_param($stmt, "ssssssi", $nis, $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_class, $id_wali);
+    
+    if (mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('Data berhasil ditambahkan!'); window.location.href = 'index.php';</script>";
     } else {
         echo "<script>alert('Gagal menambahkan data!');</script>";
     }
+    
+    mysqli_stmt_close($stmt);
 }
 ?>
 
@@ -32,10 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container mt-4">
         <h2 class="mb-3">Tambah Data Siswa</h2>
         <form method="POST">
-            <div class="mb-3">
-                <label class="form-label">NIS</label>
-                <input type="text" name="nis" class="form-control" required>
-            </div>
             <div class="mb-3">
                 <label class="form-label">Nama</label>
                 <input type="text" name="nama_siswa" class="form-control" required>
@@ -77,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ?>
                 </select>
             </div>
-            <button type="submit" class="btn btn-success">Simpan</button>
-            <a href="data_siswa.php" class="btn btn-secondary">Kembali</a>
+            <button type="submit" class="btn btn-success">Tambah</button>
+            <a href="index.php" class="btn btn-secondary">Kembali</a>
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
