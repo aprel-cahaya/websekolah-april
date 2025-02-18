@@ -27,10 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $tempat_lahir = $_POST['tempat_lahir'];
     $tanggal_lahir = $_POST['tanggal_lahir'];
+    $id_class = $_POST['id_class'];
+    $id_wali = $_POST['id_wali'];
     
-    $query = "UPDATE siswa SET nama_siswa = ?, jenis_kelamin = ?, tempat_lahir = ?, tanggal_lahir = ? WHERE id_siswa = ?";
+    $query = "UPDATE siswa SET nama_siswa = ?, jenis_kelamin = ?, tempat_lahir = ?, tanggal_lahir = ?, id_class = ?, id_wali = ? WHERE id_siswa = ?";
     $stmt = mysqli_prepare($koneksi, $query);
-    mysqli_stmt_bind_param($stmt, "ssssi", $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_siswa);
+    mysqli_stmt_bind_param($stmt, "ssssiii", $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_class, $id_wali, $id_siswa);
     
     if (mysqli_stmt_execute($stmt)) {
         echo "<script>alert('Data berhasil diperbarui!'); window.location.href = 'index.php';</script>";
@@ -40,6 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     mysqli_stmt_close($stmt);
 }
+
+// Fetch class and guardian data
+$kelas_query = mysqli_query($koneksi, "SELECT * FROM kelas");
+$wali_query = mysqli_query($koneksi, "SELECT * FROM wali_murid");
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +79,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label class="form-label">Tanggal Lahir</label>
                 <input type="date" name="tanggal_lahir" class="form-control" value="<?php echo $siswa['tanggal_lahir']; ?>" required>
             </div>
-            <button type="submit" class="btn btn-success">Perbarui</button>
+            <div class="mb-3">
+                <label class="form-label">Kelas</label>
+                <select name="id_class" class="form-control" required>
+                    <?php while ($kelas = mysqli_fetch_assoc($kelas_query)): ?>
+                        <option value="<?php echo $kelas['id_class']; ?>" <?php echo ($siswa['id_class'] == $kelas['id_class']) ? 'selected' : ''; ?>>
+                            <?php echo $kelas['nama_kelas']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Wali Murid</label>
+                <select name="id_wali" class="form-control" required>
+                    <?php while ($wali = mysqli_fetch_assoc($wali_query)): ?>
+                        <option value="<?php echo $wali['id_wali']; ?>" <?php echo ($siswa['id_wali'] == $wali['id_wali']) ? 'selected' : ''; ?>>
+                            <?php echo $wali['nama_wali']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Simpan</button>
             <a href="index.php" class="btn btn-secondary">Kembali</a>
         </form>
     </div>

@@ -42,7 +42,7 @@ $result = mysqli_query($koneksi, $query);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <<div class="container mt-4">
+    <div class="container mt-4">
         <h2 class="mb-3">Data Siswa</h2>
         <div class="d-flex justify-content-between mb-3">
             <div>

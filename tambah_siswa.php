@@ -51,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Jenis Kelamin</label>
                 <select name="jenis_kelamin" class="form-control" required>
-                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="">-- Pilih jenis kelamin --</option>
+                    <option value="Laki-laki">Laki-laki</option>z
                     <option value="Perempuan">Perempuan</option>
                 </select>
             </div>
@@ -66,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Kelas</label>
                 <select name="id_class" class="form-control" required>
+                <option value="">-- Pilih Kelas --</option>
                     <?php
                     $kelas_query = mysqli_query($koneksi, "SELECT * FROM kelas");
                     while ($kelas = mysqli_fetch_assoc($kelas_query)) {
@@ -77,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Wali Murid</label>
                 <select name="id_wali" class="form-control" required>
+                <option value="">-- Pilih Wali murid --</option>
                     <?php
                     $wali_query = mysqli_query($koneksi, "SELECT * FROM wali_murid");
                     while ($wali = mysqli_fetch_assoc($wali_query)) {
