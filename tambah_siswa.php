@@ -2,32 +2,40 @@
 include 'koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    $nis_query = mysqli_query($koneksi, "SELECT MAX(nis) AS max_nis FROM siswa");
-    $nis_result = mysqli_fetch_assoc($nis_query);
-    $nis = $nis_result['max_nis'] + 1; 
+    // Ambil data dari form
+    $nama_siswa = $_POST['nama_siswa'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $tempat_lahir = $_POST['tempat_lahir'];
+    $tanggal_lahir = $_POST['tanggal_lahir'];
+    $id_class = $_POST['id_class'];
+    $id_wali = $_POST['id_wali'];
 
-   
-
+    // Validasi jenis kelamin
     if (!in_array($jenis_kelamin, ['Laki-laki', 'Perempuan'])) {
         die("Jenis kelamin tidak valid!");
     }
-    
-    
+
+    // Konversi jenis kelamin ke format yang sesuai dalam database
     $jenis_kelamin = ($jenis_kelamin == 'Laki-laki') ? 'L' : 'P';
-    
-    
+
+    // Ambil NIS terbaru dan tambahkan 1
+    $nis_query = mysqli_query($koneksi, "SELECT MAX(nis) AS max_nis FROM siswa");
+    $nis_result = mysqli_fetch_assoc($nis_query);
+    $nis = ($nis_result['max_nis'] ?? 0) + 1; 
+
+    // Persiapkan query
     $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_class, id_wali) 
               VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($koneksi, $query);
-    mysqli_stmt_bind_param($stmt, "ssssssi", $nis, $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_class, $id_wali);
-    
+    mysqli_stmt_bind_param($stmt, "issssii", $nis, $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_class, $id_wali);
+
+    // Eksekusi query
     if (mysqli_stmt_execute($stmt)) {
         echo "<script>alert('Data berhasil ditambahkan!'); window.location.href = 'index.php';</script>";
     } else {
         echo "<script>alert('Gagal menambahkan data!');</script>";
     }
-    
+
     mysqli_stmt_close($stmt);
 }
 ?>
@@ -52,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label class="form-label">Jenis Kelamin</label>
                 <select name="jenis_kelamin" class="form-control" required>
                     <option value="">-- Pilih jenis kelamin --</option>
-                    <option value="Laki-laki">Laki-laki</option>z
+                    <option value="Laki-laki">Laki-laki</option>
                     <option value="Perempuan">Perempuan</option>
                 </select>
             </div>
@@ -67,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Kelas</label>
                 <select name="id_class" class="form-control" required>
-                <option value="">-- Pilih Kelas --</option>
+                    <option value="">-- Pilih Kelas --</option>
                     <?php
                     $kelas_query = mysqli_query($koneksi, "SELECT * FROM kelas");
                     while ($kelas = mysqli_fetch_assoc($kelas_query)) {
@@ -79,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Wali Murid</label>
                 <select name="id_wali" class="form-control" required>
-                <option value="">-- Pilih Wali murid --</option>
+                    <option value="">-- Pilih Wali murid --</option>
                     <?php
                     $wali_query = mysqli_query($koneksi, "SELECT * FROM wali_murid");
                     while ($wali = mysqli_fetch_assoc($wali_query)) {
