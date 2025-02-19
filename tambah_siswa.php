@@ -2,7 +2,7 @@
 include 'koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data dari form
+  
     $nama_siswa = $_POST['nama_siswa'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $tempat_lahir = $_POST['tempat_lahir'];
@@ -10,26 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_class = $_POST['id_class'];
     $id_wali = $_POST['id_wali'];
 
-    // Validasi jenis kelamin
-    if (!in_array($jenis_kelamin, ['Laki-laki', 'Perempuan'])) {
-        die("Jenis kelamin tidak valid!");
-    }
-
-    // Konversi jenis kelamin ke format yang sesuai dalam database
     $jenis_kelamin = ($jenis_kelamin == 'Laki-laki') ? 'L' : 'P';
 
-    // Ambil NIS terbaru dan tambahkan 1
     $nis_query = mysqli_query($koneksi, "SELECT MAX(nis) AS max_nis FROM siswa");
     $nis_result = mysqli_fetch_assoc($nis_query);
     $nis = ($nis_result['max_nis'] ?? 0) + 1; 
 
-    // Persiapkan query
+   
     $query = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin, tempat_lahir, tanggal_lahir, id_class, id_wali) 
               VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($koneksi, $query);
     mysqli_stmt_bind_param($stmt, "issssii", $nis, $nama_siswa, $jenis_kelamin, $tempat_lahir, $tanggal_lahir, $id_class, $id_wali);
 
-    // Eksekusi query
+   
     if (mysqli_stmt_execute($stmt)) {
         echo "<script>alert('Data berhasil ditambahkan!'); window.location.href = 'index.php';</script>";
     } else {
