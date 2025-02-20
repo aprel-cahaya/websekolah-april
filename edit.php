@@ -43,7 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_stmt_close($stmt);
 }
 
-// Fetch class and guardian data
 $kelas_query = mysqli_query($koneksi, "SELECT * FROM kelas");
 $wali_query = mysqli_query($koneksi, "SELECT * FROM wali_murid");
 ?>

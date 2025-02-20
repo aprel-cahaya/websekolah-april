@@ -23,8 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_wali = isset($_POST['nama_wali']) ? $_POST['nama_wali'] : '';
     $kontak = isset($_POST['kontak']) ? $_POST['kontak'] : '';
 
-  
-        // Update the database with new values
         $query = "UPDATE wali_murid SET nama_wali = '$nama_wali', kontak = '$kontak' WHERE id_wali = '$id_wali'";
 
         if (mysqli_query($koneksi, $query)) {

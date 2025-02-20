@@ -1,7 +1,6 @@
 <?php
 include 'koneksi.php';
 
-// Cek apakah ID kelas diberikan
 if (!isset($_GET['id'])) {
     header("Location: kelas.php");
     exit();
@@ -9,7 +8,6 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Ambil data kelas
 $query = "SELECT * FROM kelas WHERE id_class = $id";
 $result = mysqli_query($koneksi, $query);
 $row = mysqli_fetch_assoc($result);
@@ -22,7 +20,6 @@ if (!$row) {
     exit();
 }
 
-// Proses update data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama_kelas = $_POST['nama_kelas'];
 

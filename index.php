@@ -1,20 +1,18 @@
 <?php
 include 'koneksi.php';
 
-// Initialize search variable
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Create the search query if there's input
 $search_query = '';
 if ($search) {
-    $search_query = "WHERE nama_siswa LIKE '%$search%' OR nama_kelas LIKE '%$search%' OR nama_wali LIKE '%$search%'";
+    $search_query = "WHERE nama_siswa LIKE '%$search%'";
 }
 
-$limit = 10; // Number of records per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get current page, default to 1
-$start = ($page - 1) * $limit; // Calculate the starting record for the SQL query
+$limit = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page - 1) * $limit; 
 
-// Count total records
+
 $total_result = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM siswa 
     LEFT JOIN kelas ON siswa.id_class = kelas.id_class
     LEFT JOIN wali_murid ON siswa.id_wali = wali_murid.id_wali
@@ -23,7 +21,7 @@ $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'] ?? 0;
 $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
 
-// Fetch student data with search filter
+
 $query = "SELECT siswa.*, kelas.nama_kelas, wali_murid.nama_wali FROM siswa 
             LEFT JOIN kelas ON siswa.id_class = kelas.id_class
             LEFT JOIN wali_murid ON siswa.id_wali = wali_murid.id_wali 
@@ -86,7 +84,7 @@ $result = mysqli_query($koneksi, $query);
                     <td><?php echo $row['nama_wali']; ?></td>
                     <td>
                         <a href="edit.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="delete.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                        <a href="delete/delete_kelas.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>

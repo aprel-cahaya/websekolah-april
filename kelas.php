@@ -1,10 +1,8 @@
 <?php
 include 'koneksi.php';
 
-// Initialize search variable
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Create the search query if there's input
 $search_query = '';
 if ($search) {
     $search_query = "WHERE nama_kelas LIKE '%$search%'";
@@ -14,13 +12,11 @@ $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
 $start = ($page - 1) * $limit; 
 
-// Count total records
 $total_result = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM kelas $search_query");
 $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'] ?? 0;
 $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
 
-// Ambil data siswa
 $query = "SELECT * FROM kelas $search_query";
 
 $result = mysqli_query($koneksi, $query);

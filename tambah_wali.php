@@ -7,8 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_wali = $_POST['nama_wali'] ;
     $kontak = $_POST['kontak'];
 
-
-        // Insert into database
         $query = "INSERT INTO wali_murid (nama_wali, kontak) VALUES ('$nama_wali', '$kontak')";
         if (mysqli_query($koneksi, $query)) {
             header('Location: wali_murid.php'); 
