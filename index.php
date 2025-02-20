@@ -1,15 +1,17 @@
 <?php
 include 'koneksi.php';
 
+
 $search = isset($_GET['search']) ? $_GET['search'] : '';
+
 
 $search_query = '';
 if ($search) {
-    $search_query = "WHERE nama_siswa LIKE '%$search%'";
+    $search_query = "WHERE nama_siswa LIKE '%$search%' OR nama_kelas LIKE '%$search%' OR nama_wali LIKE '%$search%'";
 }
 
-$limit = 10;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
 $start = ($page - 1) * $limit; 
 
 
@@ -20,7 +22,6 @@ $total_result = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM siswa
 $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'] ?? 0;
 $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
-
 
 $query = "SELECT siswa.*, kelas.nama_kelas, wali_murid.nama_wali FROM siswa 
             LEFT JOIN kelas ON siswa.id_class = kelas.id_class
@@ -84,7 +85,7 @@ $result = mysqli_query($koneksi, $query);
                     <td><?php echo $row['nama_wali']; ?></td>
                     <td>
                         <a href="edit.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="delete/delete_kelas.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                        <a href="delete.php?id=<?php echo $row['id_siswa']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>
