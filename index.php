@@ -7,7 +7,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 $search_query = '';
 if ($search) {
-    $search_query = "WHERE nama_siswa LIKE '%$search%' OR nama_kelas LIKE '%$search%' OR nama_wali LIKE '%$search%'";
+    $search_query = "WHERE nama_siswa LIKE '%$search%' ";
 }
 
 $limit = 10; 
@@ -19,6 +19,7 @@ $total_result = mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM siswa
     LEFT JOIN kelas ON siswa.id_class = kelas.id_class
     LEFT JOIN wali_murid ON siswa.id_wali = wali_murid.id_wali
     $search_query");
+    
 $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'] ?? 0;
 $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
